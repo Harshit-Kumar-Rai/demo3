@@ -1,0 +1,130 @@
+'''
+this models not in use in this project . it is kept here for reference and future development
+this  model was used to create the first version of the app.
+now check the models folder in that all models there 
+'''
+
+
+from django.db import models
+
+# Entity details
+class EntityDetails(models.Model):
+  name = models.CharField(max_length=150)
+  short_name = models.CharField(max_length=100)
+  long_name = models.CharField(max_length=300)
+  trade_name = models.CharField(max_length=100)
+  type_id = models.ForeignKey('EntityTypeID', on_delete=models.CASCADE, blank=True, null=True, related_name='MasterEntityTypeID') # This is the entity's role
+  role_id = models.ForeignKey('EntityRoleID', on_delete=models.CASCADE, blank=True, null=True, related_name='MasterEntityRoleID') # This is role id 
+  
+  def __str__(self):
+    return self.name
+
+class EntityTypeID(models.Model):
+  name = models.CharField(max_length=100)
+  
+  def __str__(self):
+    return self.name
+
+class EntityRoleID(models.Model):
+  name = models.CharField(max_length=100)
+  
+  def __str__(self):
+    return self.name
+
+
+# Address Details
+
+class AddressDetails(models.Model):
+  entity_id = models.ForeignKey('EntityDetails', on_delete=models.CASCADE, blank=True, null=True, related_name='addressentitydetails')
+  aaddress_type_id = models.ForeignKey('AddressType', on_delete=models.CASCADE, blank=True, null=True, related_name='addresstype')
+  country_id = models.ForeignKey('Country', on_delete=models.CASCADE, blank=True, null=True, related_name='mastercountry')
+  state_id = models.ForeignKey('State', on_delete=models.CASCADE, blank=True, null=True, related_name='masterstate')
+  city_id = models.ForeignKey('City', on_delete=models.CASCADE, blank=True, null=True, related_name='city')
+  zone_id = models.ForeignKey('Zone', on_delete=models.CASCADE, blank=True, null=True, related_name='masterzone')
+  ward_id = models.ForeignKey('Ward', on_delete=models.CASCADE, blank=True, null=True, related_name='masterward')
+  longtitude = models.CharField(max_length=100, blank=True,null=True)
+  latitude = models.CharField(max_length=100, blank=True, null=True)
+  
+  def __str__(self):
+    return self.entity_id.name
+
+class AddressType(models.Model):
+  address_type = models.CharField(max_length=100)
+  remarks = models.CharField(max_length=1000)
+  
+  def __str__(self):
+    return self.address_type
+
+class City(models.Model):
+  name = models.CharField(max_length=80)
+  state_id = models.ForeignKey('State', on_delete=models.CASCADE, blank=True, null=True, related_name='state')
+  ward_id = models.ForeignKey('Ward', on_delete=models.CASCADE, blank=True, null=True, related_name='ward')
+
+  def __str__(self):
+    return self.name
+  
+class State(models.Model):
+  name = models.CharField(max_length=100)
+  country_id = models.ForeignKey('Country', on_delete=models.CASCADE, blank=True, null=True, related_name='statecountry')
+  
+  def __str__(self):
+    return self.name
+
+class Country(models.Model):
+  name = models.CharField(max_length=100)
+
+  def __str__(self):
+    return self.name
+  
+class Ward(models.Model):
+  name = models.CharField(max_length=100)
+  zone_id = models.ForeignKey('Zone', on_delete=models.CASCADE, blank=True, null=True, related_name='zone')
+  
+  def __str__(self):
+    return self.name
+
+class Zone(models.Model):
+  name = models.CharField(max_length=100)
+  
+  def __str__(self):
+    return self.name
+
+
+# contact details
+
+class ContactDetails(models.Model):
+  saluation_id = models.ForeignKey('Salutation', on_delete=models.CASCADE, blank=True, null=True, related_name='saluation')
+  first_name = models.CharField(max_length=100)
+  last_name  = models.CharField(max_length=100)
+  address_id = models.ForeignKey('AddressDetails', on_delete=models.CASCADE, blank=True, null=True, related_name='address')
+  image = models.ImageField(upload_to = 'media',blank=True,null=True)
+  
+  def __str__(self):
+    return self.first_name
+
+class Salutation(models.Model):
+  name =  models.CharField(max_length=100)
+
+  def __str__(self):
+    return self.name
+# Device Details
+
+class DeviceDetails(models.Model):
+  device_name  = models.CharField(max_length=100)
+  entity_id = models.ForeignKey('EntityDetails', on_delete=models.CASCADE, blank=True, null=True, related_name='entitydetails')
+  device_type_id = models.ForeignKey('DeviceType', on_delete=models.CASCADE, blank=True, null=True, related_name='devicetype')
+  
+  def __str__(self):
+    return self.device_name
+
+class DeviceType(models.Model):
+  name = models.CharField(max_length=50)
+  
+  def __str__(self):
+    return self.name
+
+class DeviceParameter(models.Model):
+  pass
+
+class DeviceParameterUnitDetails(models.Model):
+  pass
